@@ -25,6 +25,7 @@ router.post("/register", (req, res) => {
 
 router.post("/login", (req, res) => {
   //find email
+
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
       return res.status(400).json({
@@ -46,12 +47,13 @@ router.post("/login", (req, res) => {
       res
         .cookie("x_auth", user.token)
         .status(200)
-        .json({ loginSucess: true, userId: user._id });
+        .json({ loginSucess: true, userId: user._id, token: user.token });
     });
   });
 });
 
 router.get("/logout", auth, (req, res) => {
+  //console.log(req.user);
   User.findOneAndUpdate({ _id: req.user._id }, { token: "" }, (err, doc) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
@@ -64,6 +66,7 @@ router.get("/logout", auth, (req, res) => {
 router.get("/auth", auth, (req, res) => {
   res.status(200).json({
     _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
     isAuth: true,
     email: req.user.email,
     name: req.user.name,

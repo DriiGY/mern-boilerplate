@@ -9,6 +9,7 @@ const { User } = require("./models/User");
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
 //connect to db
 const mongoose = require("mongoose");
 const connect = mongoose
